@@ -4,6 +4,7 @@ const authenticate = require('../authenticate');
 
 const promotionRouter = express.Router();
 
+
 promotionRouter.route('/')
 
 .get((req, res, next) => {
@@ -25,11 +26,11 @@ promotionRouter.route('/')
         res.json(promotion);
     })
 })
-.put(authenticate.verifyUser, (req, res) => {
+.put(authenticate.verifyUser,authenticate.verifyAdmin, (req, res) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /campsites');
 })
-.delete(authenticate.verifyUser, (req, res, next) => {
+.delete(authenticate.verifyUser,authenticate.verifyAdmin, (req, res, next) => {
     Promotion.deleteMany()
     .then(response => {
         res.statusCode = 200;
@@ -67,7 +68,7 @@ promotionRouter.route('/:promotionId')
     .catch(err => next(err));
 })
 
-.delete(authenticate.verifyUser, (req, res, next) => {
+.delete(authenticate.verifyUser,authenticate.verifyAdmin, (req, res, next) => {
     Promotion.findByIdAndDelete(req.params.promotionId)
     .then(response => {
         res.statusCode = 200;
